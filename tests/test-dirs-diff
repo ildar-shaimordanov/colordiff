@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+for o in c p u '-normal' e n y
+do
+	cat - <<-HEADER
+
+	===============================
+	Testing diff dirs: diff -$o ...
+
+	HEADER
+
+	colordiff tests/dir1 tests/dir2 -$o
+done
