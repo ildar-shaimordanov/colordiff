@@ -24,7 +24,20 @@ colordiff [diff options] [colordiff options] file1 file2
 
 Run the script with no options to learn how to use it -- not a long help page will be displayed.
 
-The tool can be used as a standalone executable script or a shell function sourced from `~/.bashrc`.
+The tool can be used as a standalone executable script or a shell function sourced from `~/.bashrc` or aliased as follows:
+
+```
+if diff --help 2>/dev/null | grep -q color
+then
+	alias diff='diff --color=auto'
+elif which ~/bin/colordiff > /dev/null 2>&1
+then
+	alias diff=~/bin/colordiff
+elif which colordiff > /dev/null 2>&1
+then
+	alias diff=colordiff
+fi
+```
 
 ## `colordiff` options
 
