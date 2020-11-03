@@ -121,7 +121,12 @@ HELP
 	"
 	local diff_schema_unified="
 		# diff -u ...
-		# File headers
+		# File headers: diff file1 file2
+		1,/^+++ / {
+			/^--- / s/^/$diff_b_meta/;
+			/^+++ / s/^/$diff_b_meta/;
+		}
+		# File headers: diff dir1 dir2
 		/^[A-Za-z]/,/^+++ / {
 			/^[A-Za-z]/ s/^/$diff_b_meta/;
 			/^--- / s/^/$diff_b_meta/;
@@ -275,7 +280,8 @@ HELP
 
 # =========================================================================
 
-[ "$BASH_SOURCE" = "$0" ] || return
+# Escape if sourced
+case "$-" in *i* ) return ;; esac
 
 colordiff "$@"
 
