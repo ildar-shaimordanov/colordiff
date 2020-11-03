@@ -5,6 +5,7 @@
 * [Usage](#usage)
   * [`colordiff` options](#colordiff-options)
   * [Environment](#environment)
+* [Requirements](#requirements)
 * [See Also](#see-also)
 * [License](#license)
 <!-- md-toc-end -->
@@ -33,6 +34,14 @@ The tool can be used as a standalone executable script or a shell function sourc
 
 * `CDIFF_WHEN` - the colorizing method has impact on all runs.
 * `CDIFF_COLORS` - the colon-separated list of capabilities to color the separate parts of the `diff` output.
+
+# Requirements
+
+The latest version of the script __was developed and successfully tested__ in the following environment:
+
+* cygwin 3.1.7
+* bash 4.4
+* sed 4.4
 
 # See Also
 
