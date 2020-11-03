@@ -123,6 +123,7 @@ HELP
 		# diff -u ...
 		# File headers: diff file1 file2
 		1,/^+++ / {
+			/^[A-Za-z]/ s/^/$diff_b_meta/;
 			/^--- / s/^/$diff_b_meta/;
 			/^+++ / s/^/$diff_b_meta/;
 		}
