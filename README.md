@@ -52,14 +52,15 @@ fi
 
 The latest version of the script __was developed and successfully tested__ in the following environment:
 
-* cygwin 3.1.7
-* bash 4.4
-* sed 4.4
+* cygwin 1.45, 3.1.7
+* bash 4.2, 4.4
+* sed 4.2, 4.4
 
 # See Also
 
 * grep(1) - for the `--color/--colour` options.
 * git-config(1) - for the `color.diff.<slot>` parameters. `colordiff` uses the same terminology.
+* Options to diff - including diff 3.4+ options https://www.gnu.org/software/diffutils/manual/html_node/diff-Options.html
 
 There is another Perl script with the same functionality. It exists in two versions maintained by its authors:
 
