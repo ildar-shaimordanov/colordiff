@@ -100,16 +100,16 @@ HELP
 		# diff -c ...
 		# File headers
 		/^[A-Za-z0-9]/ s/^/$diff_b_meta/;
-		/^\**$/ s/^/$diff_b_meta/;
+		/^\**\$/ s/^/$diff_b_meta/;
 
 		# File or difference headers 
 		/^\*\*\* / {
-			/\*\*\*\*$/! s/^/$diff_b_meta/;
-			/\*\*\*\*$/  s/^/$diff_b_frag/;
+			/\*\*\*\*\$/! s/^/$diff_b_meta/;
+			/\*\*\*\*\$/  s/^/$diff_b_frag/;
 		};
 		/^--- / {
-			/----$/! s/^/$diff_b_meta/;
-			/----$/  s/^/$diff_b_frag/;
+			/----\$/! s/^/$diff_b_meta/;
+			/----\$/  s/^/$diff_b_frag/;
 		};
 
 		# Changed lines
@@ -119,13 +119,13 @@ HELP
 	"
 	local diff_schema_unified="
 		# diff -u ...
-		# File headers: diff file1 file2
+		# File headers: in the beginning
 		1,/^+++ / {
 			/^[A-Za-z]/ s/^/$diff_b_meta/;
 			/^--- / s/^/$diff_b_meta/;
 			/^+++ / s/^/$diff_b_meta/;
 		}
-		# File headers: diff dir1 dir2
+		# File headers: others
 		/^[A-Za-z]/,/^+++ / {
 			/^[A-Za-z]/ s/^/$diff_b_meta/;
 			/^--- / s/^/$diff_b_meta/;
@@ -185,8 +185,7 @@ HELP
 
 	local diff_scheme="$diff_schema_normal"
 
-	# Assume "auto", if not specified
-	local CDIFF_WHEN="${CDIFF_WHEN:-auto}"
+	local CDIFF_WHEN="$CDIFF_WHEN"
 
 	# Validate environment variable
 	case "$CDIFF_WHEN" in
@@ -194,8 +193,8 @@ HELP
 		# Do nothing: it is valid value
 		;;
 	* )
-		echo "Invalid value '$CDIFF_WHEN' in CDIFF_WHEN" >&2
-		return 2
+		# Invalid or empty value: skip it and setup "auto"
+		CDIFF_WHEN="auto"
 		;;
 	esac
 
@@ -263,7 +262,7 @@ HELP
 		test -t 1 || diff_scheme=""
 		;;
 	* )
-		echo "Invalid argument '$CDIFF_WHEN' for --color" >&2
+		echo "Invalid color: '$CDIFF_WHEN'" >&2
 		return 2
 		;;
 	esac
