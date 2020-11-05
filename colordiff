@@ -41,8 +41,8 @@ ENVIRONMENT VARIABLES
 CDIFF_COLORS
 This environment variable is used to specify colors to highlight the
 separate parts of the diff output. Its value is a colon-separated list
-of capabilities. Names and responsibility of each capability correspond
-to the configuration parameters "color.diff.<slot>" used in "git config".
+of capabilities. Names and values of each capability correspond to the
+configuration parameters "color.diff.<slot>" used in "git config".
 Values are integers in decimal representation and can be concatenated with
 semicolons. Further these values are assembled into ANSI escape codes.
 
@@ -75,15 +75,13 @@ HELP
 	local c
 	for c in ${CDIFF_COLORS//:/ }
 	do
-		[ -n "${c#*=}" ] || break
-		eval "diff_b_${c%%=*}='${c#*=}'"
+		case "${c%%=*}" in
+		meta | frag | old | new | mod )
+			# Setup these ones; skip others
+			eval "diff_b_${c%%=*}='\\x1b[${c#*=}m'"
+			;;
+		esac
 	done
-
-	diff_b_meta="\\x1b[${diff_b_meta}m"
-	diff_b_frag="\\x1b[${diff_b_frag}m"
-	diff_b_old="\\x1b[${diff_b_old}m"
-	diff_b_new="\\x1b[${diff_b_new}m"
-	diff_b_mod="\\x1b[${diff_b_mod}m"
 
 	# Schemes
 	local diff_schema_normal="
@@ -187,7 +185,7 @@ HELP
 
 	local diff_scheme="$diff_schema_normal"
 
-	# Assume "auto" if not specified
+	# Assume "auto", if not specified
 	local CDIFF_WHEN="${CDIFF_WHEN:-auto}"
 
 	# Validate environment variable
@@ -257,11 +255,11 @@ HELP
 		# Do nothing over defined by options
 		;;
 	never )
-		# Skip colorizing
+		# Skip colorizing at all
 		diff_scheme=""
 		;;
 	auto )
-		# Check if piped
+		# Skip colorizing, if not a terminal
 		test -t 1 || diff_scheme=""
 		;;
 	* )
