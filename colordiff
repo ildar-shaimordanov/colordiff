@@ -7,7 +7,9 @@
 # http://www.colordiff.org/
 colordiff() {
 	# Colors
-	local diff_c_reset='\x1b[0m'
+	local ESC="$( printf "\\033" )"
+
+	local diff_c_reset="$ESC[0m"
 
 	local diff_b_meta="40;1;37"	# white
 	local diff_b_frag="36"		# cyan
@@ -78,7 +80,7 @@ HELP
 		case "${c%%=*}" in
 		meta | frag | old | new | mod )
 			# Setup these ones; skip others
-			eval "diff_b_${c%%=*}='\\x1b[${c#*=}m'"
+			eval "diff_b_${c%%=*}='$ESC[${c#*=}m'"
 			;;
 		esac
 	done
@@ -268,11 +270,11 @@ HELP
 	esac
 
 	[ -n "$diff_scheme" ] || {
-		env diff "${args[@]}"
+		command diff "${args[@]}"
 		return $?
 	}
 
-	env diff "${args[@]}" | sed "$diff_scheme; s/\$/$diff_c_reset/"
+	command diff "${args[@]}" | sed "$diff_scheme; s/\$/$diff_c_reset/"
 	return $PIPESTATUS
 }
 
