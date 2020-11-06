@@ -205,7 +205,7 @@ HELP
 	while [ $# -gt 0 ]
 	do
 		case "$1" in
-		--help | -v | --version )
+		--help | -v | --version | -q | --brief )
 			diff_scheme=""
 			break
 			;;
