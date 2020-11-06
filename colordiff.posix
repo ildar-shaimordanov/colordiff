@@ -214,11 +214,13 @@ HELP
 
 	EOO=""
 
+	no_scheme=""
+
 	while [ $# -gt 0 ]
 	do
 		[ -n "$EOO" ] || case "$1" in
-		--help | -v | --version | -q | --brief )
-			diff_scheme=""
+		--help | -v | --version | -q | --brief | -s | --report-identical-files )
+			no_scheme=1
 			;;
 		-- )
 			EOO=1
@@ -269,11 +271,11 @@ HELP
 		;;
 	never )
 		# Skip colorizing at all
-		diff_scheme=""
+		no_scheme=1
 		;;
 	auto )
 		# Skip colorizing, if not a terminal
-		test -t 1 || diff_scheme=""
+		test -t 1 || no_scheme=1
 		;;
 	* )
 		echo "Invalid color: '$CDIFF_WHEN'" >&2
@@ -281,7 +283,7 @@ HELP
 		;;
 	esac
 
-	[ -n "$diff_scheme" ] || {
+	[ -z "$no_scheme" ] || {
 		command diff "$@"
 		return $?
 	}
