@@ -1,28 +1,28 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
-# shellcheck shell=bash
+# shellcheck shell=sh # But it still fails on "pipefail". Find it below
 
 # =========================================================================
 
 # http://stackoverflow.com/q/8800578/100073
 # https://retracile.net/blog/2013/06/01/22.00
 # http://www.colordiff.org/
-colordiff() {
+colordiff() (
 	# Colors
 
 	# Because the exit code not required
 	# shellcheck disable=SC2155
-	local ESC="$( printf "\\033" )"
+	ESC="$( printf "\\033" )"
 
 	# Because correct definition; no errors
 	# shellcheck disable=SC1087
-	local diff_c_reset="$ESC[0m"
+	diff_c_reset="$ESC[0m"
 
-	local diff_b_meta="40;1;37"	# white
-	local diff_b_frag="36"		# cyan
-	local diff_b_old="31"		# red
-	local diff_b_new="32"		# green
-	local diff_b_mod="34"		# blue
+	diff_b_meta="40;1;37"	# white
+	diff_b_frag="36"	# cyan
+	diff_b_old="31"		# red
+	diff_b_new="32"		# green
+	diff_b_mod="34"		# blue
 
 	[ $# -gt 0 ] || {
 		cat - <<HELP
@@ -79,10 +79,12 @@ HELP
 	}
 
 	# Blocks
-	local CDIFF_COLORS="${CDIFF_COLORS:-meta=$diff_b_meta:frag=$diff_b_frag:old=$diff_b_old:new=$diff_b_new:mod=$diff_b_mod}"
+	CDIFF_COLORS="${CDIFF_COLORS:-meta=$diff_b_meta:frag=$diff_b_frag:old=$diff_b_old:new=$diff_b_new:mod=$diff_b_mod}"
 
-	local c
-	for c in ${CDIFF_COLORS//:/ }
+	saveIFS="$IFS"
+	IFS=":"
+
+	for c in $CDIFF_COLORS
 	do
 		case "${c%%=*}" in
 		meta | frag | old | new | mod )
@@ -93,8 +95,10 @@ HELP
 		esac
 	done
 
+	IFS="$saveIFS"
+
 	# Schemes
-	local diff_schema_normal="
+	diff_schema_normal="
 		# diff ...
 		# File headers
 		/^[A-Za-z]/ s/^/$diff_b_meta/;
@@ -106,7 +110,7 @@ HELP
 		/^< / s/^/$diff_b_old/;
 		/^> / s/^/$diff_b_new/;
 	"
-	local diff_schema_context="
+	diff_schema_context="
 		# diff -c ...
 		# File headers
 		/^[A-Za-z0-9]/ s/^/$diff_b_meta/;
@@ -127,7 +131,7 @@ HELP
 		/^- / s/^/$diff_b_old/;
 		/^+ / s/^/$diff_b_new/;
 	"
-	local diff_schema_unified="
+	diff_schema_unified="
 		# diff -u ...
 		# File headers: in the beginning
 		1,/^+++ / {
@@ -149,7 +153,7 @@ HELP
 		/^-/ s/^/$diff_b_old/;
 		/^+/ s/^/$diff_b_new/;
 	"
-	local diff_schema_ed="
+	diff_schema_ed="
 		# diff -e ...
 		# File headers
 		/^diff \(-e\|--ed\) / s/^/$diff_b_meta/;
@@ -164,7 +168,7 @@ HELP
 			/d\$/ s/^/$diff_b_old/;
 		}
 	"
-	local diff_schema_rcs="
+	diff_schema_rcs="
 		# diff -n ...
 		# File headers
 		/^diff \(-n\|--rcs\) / s/^/$diff_b_meta/;
@@ -178,7 +182,7 @@ HELP
 			/^a/ s/^/$diff_b_new/;
 		}
 	"
-	local diff_schema_sidebyside="
+	diff_schema_sidebyside="
 		# diff -y ...
 		# File headers
 		/^diff \(-y\|--side-by-side\) / s/^/$diff_b_meta/;
@@ -193,9 +197,9 @@ HELP
 		/^[\t ]*>\t.*/ s/^/$diff_b_new/;
 	"
 
-	local diff_scheme="$diff_schema_normal"
+	diff_scheme="$diff_schema_normal"
 
-	local CDIFF_WHEN="$CDIFF_WHEN"
+	CDIFF_WHEN="$CDIFF_WHEN"
 
 	# Validate environment variable
 	case "$CDIFF_WHEN" in
@@ -208,55 +212,55 @@ HELP
 		;;
 	esac
 
-	local -a args
+	EOO=""
 
 	while [ $# -gt 0 ]
 	do
-		case "$1" in
+		[ -n "$EOO" ] || case "$1" in
 		--help | -v | --version | -q | --brief )
 			diff_scheme=""
-			break
 			;;
 		-- )
-			break
+			EOO=1
 			;;
 		--color | --colour )
 			CDIFF_WHEN=always
+			shift
+			continue
 			;;
 		--color=* | --colour=* )
 			CDIFF_WHEN="${1#*=}"
+			shift
+			continue
 			;;
-		* )
-			case "$1" in
-			-c | -C* | --context | --context=* )
-				diff_scheme="$diff_schema_context"
-				;;
-			-p | --show-c-function )
-				diff_scheme="$diff_schema_context"
-				;;
-			-u | -U* | --unified | --unified=* )
-				diff_scheme="$diff_schema_unified"
-				;;
-			--normal )
-				diff_scheme="$diff_schema_normal"
-				;;
-			-e | --ed )
-				diff_scheme="$diff_schema_ed"
-				;;
-			-n | --rcs )
-				diff_scheme="$diff_schema_rcs"
-				;;
-			-y | --side-by-side )
-				diff_scheme="$diff_schema_sidebyside"
-				;;
-			esac
-			args+=( "$1" )
+		-c | -C* | --context | --context=* )
+			diff_scheme="$diff_schema_context"
+			;;
+		-p | --show-c-function )
+			diff_scheme="$diff_schema_context"
+			;;
+		-u | -U* | --unified | --unified=* )
+			diff_scheme="$diff_schema_unified"
+			;;
+		--normal )
+			diff_scheme="$diff_schema_normal"
+			;;
+		-e | --ed )
+			diff_scheme="$diff_schema_ed"
+			;;
+		-n | --rcs )
+			diff_scheme="$diff_schema_rcs"
+			;;
+		-y | --side-by-side )
+			diff_scheme="$diff_schema_sidebyside"
 			;;
 		esac
+		# http://www.etalabs.net/sh_tricks.html
+		args="$args '$( echo "$1" | sed "s/'/'\\\\''/g" )'"
 		shift
 	done
 
-	args+=( "$@" )
+	eval "set -- $args"
 
 	# Validate the option and re-define the function behavior
 	case "$CDIFF_WHEN" in
@@ -278,16 +282,13 @@ HELP
 	esac
 
 	[ -n "$diff_scheme" ] || {
-		command diff "${args[@]}"
+		command diff "$@"
 		return $?
 	}
 
-	command diff "${args[@]}" | sed "$diff_scheme; s/\$/$diff_c_reset/"
-
-	# Because the first item of the array required
-	# shellcheck disable=SC2086,SC2128
-	return $PIPESTATUS
-}
+	set -o pipefail
+	command diff "$@" | sed "$diff_scheme; s/\$/$diff_c_reset/"
+)
 
 # =========================================================================
 
