@@ -293,7 +293,17 @@ HELP
 # =========================================================================
 
 # Escape if sourced
-case "$-" in *i* ) return ;; esac
+case "$-" in
+*i* )
+	return
+	;;
+esac
+
+case "${0##*/}" in
+sh | ash | dash | bash | ksh )
+	return
+	;;
+esac
 
 colordiff "$@"
 
