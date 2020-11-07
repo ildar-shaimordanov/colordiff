@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-# shellcheck shell=sh # But it still fails on "pipefail". Find it below
+# shellcheck shell=sh
 
 # =========================================================================
 
@@ -288,8 +288,17 @@ HELP
 		return $?
 	}
 
-	set -o pipefail
-	command diff "$@" | sed "$diff_scheme; s/\$/$diff_c_reset/"
+	tmpfile="$( mktemp 2>/dev/null || echo "${TMPDIR:-/tmp}/colordiff.$$" )"
+
+	trap 'rm -f "$tmpfile"' EXIT
+
+	command diff "$@" > "$tmpfile"
+
+	RET=$?
+
+	sed "$diff_scheme; s/\$/$diff_c_reset/" "$tmpfile"
+
+	return $RET
 )
 
 # =========================================================================
