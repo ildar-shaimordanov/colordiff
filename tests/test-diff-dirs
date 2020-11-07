@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+
+./colordiff.posix -U3 \
+	tests/dir1 \
+	tests/dir2
