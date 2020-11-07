@@ -257,7 +257,7 @@ HELP
 			;;
 		esac
 		# http://www.etalabs.net/sh_tricks.html
-		args="$args '$( echo "$1" | sed "s/'/'\\\\''/g" )'"
+		args="$args '$( printf '%s' "$1" | sed "s/'/'\\\\''/g" )'"
 		shift
 	done
 
