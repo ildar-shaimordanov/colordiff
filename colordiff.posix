@@ -212,6 +212,8 @@ HELP
 		;;
 	esac
 
+	args=""
+
 	EOO=""
 
 	no_scheme=""
