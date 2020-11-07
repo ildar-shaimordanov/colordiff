@@ -92,7 +92,7 @@ HELP
 	done
 
 	# Schemes
-	local diff_schema_normal="
+	local diff_scheme_normal="
 		# diff ...
 		# File headers
 		/^[A-Za-z]/ s/^/$diff_b_meta/;
@@ -104,7 +104,7 @@ HELP
 		/^< / s/^/$diff_b_old/;
 		/^> / s/^/$diff_b_new/;
 	"
-	local diff_schema_context="
+	local diff_scheme_context="
 		# diff -c ...
 		# File headers
 		/^[A-Za-z0-9]/ s/^/$diff_b_meta/;
@@ -125,7 +125,7 @@ HELP
 		/^- / s/^/$diff_b_old/;
 		/^+ / s/^/$diff_b_new/;
 	"
-	local diff_schema_unified="
+	local diff_scheme_unified="
 		# diff -u ...
 		# File headers: in the beginning
 		1,/^+++ / {
@@ -147,7 +147,7 @@ HELP
 		/^-/ s/^/$diff_b_old/;
 		/^+/ s/^/$diff_b_new/;
 	"
-	local diff_schema_ed="
+	local diff_scheme_ed="
 		# diff -e ...
 		# File headers
 		/^diff \(-e\|--ed\) / s/^/$diff_b_meta/;
@@ -162,7 +162,7 @@ HELP
 			/d\$/ s/^/$diff_b_old/;
 		}
 	"
-	local diff_schema_rcs="
+	local diff_scheme_rcs="
 		# diff -n ...
 		# File headers
 		/^diff \(-n\|--rcs\) / s/^/$diff_b_meta/;
@@ -176,7 +176,7 @@ HELP
 			/^a/ s/^/$diff_b_new/;
 		}
 	"
-	local diff_schema_sidebyside="
+	local diff_scheme_sidebyside="
 		# diff -y ...
 		# File headers
 		/^diff \(-y\|--side-by-side\) / s/^/$diff_b_meta/;
@@ -191,7 +191,7 @@ HELP
 		/^[\t ]*>\t.*/ s/^/$diff_b_new/;
 	"
 
-	local diff_scheme="$diff_schema_normal"
+	local diff_scheme="$diff_scheme_normal"
 
 	local CDIFF_WHEN="$CDIFF_WHEN"
 
@@ -229,25 +229,25 @@ HELP
 		* )
 			case "$1" in
 			-c | -C* | --context | --context=* )
-				diff_scheme="$diff_schema_context"
+				diff_scheme="$diff_scheme_context"
 				;;
 			-p | --show-c-function )
-				diff_scheme="$diff_schema_context"
+				diff_scheme="$diff_scheme_context"
 				;;
 			-u | -U* | --unified | --unified=* )
-				diff_scheme="$diff_schema_unified"
+				diff_scheme="$diff_scheme_unified"
 				;;
 			--normal )
-				diff_scheme="$diff_schema_normal"
+				diff_scheme="$diff_scheme_normal"
 				;;
 			-e | --ed )
-				diff_scheme="$diff_schema_ed"
+				diff_scheme="$diff_scheme_ed"
 				;;
 			-n | --rcs )
-				diff_scheme="$diff_schema_rcs"
+				diff_scheme="$diff_scheme_rcs"
 				;;
 			-y | --side-by-side )
-				diff_scheme="$diff_schema_sidebyside"
+				diff_scheme="$diff_scheme_sidebyside"
 				;;
 			esac
 			args+=( "$1" )
