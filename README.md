@@ -26,15 +26,29 @@ Run the script with no options to learn how to use it -- not a long help page wi
 
 The tool can be used as a standalone executable script or a shell function sourced from `~/.bashrc` or aliased as follows:
 
-```
+```sh
+# Let's check and use diff itself or git diff
 if diff --help 2>/dev/null | grep -q color
 then
+	# diff 3.4+ allows coloring
 	alias diff='diff --color=auto'
-elif which ~/bin/colordiff > /dev/null 2>&1
+elif which git > /dev/null 2>&1
+	# git is available
+	alias diff='git diff --no-index'
+fi
+
+# If one of these scripts exists, overwrite the alias for better colorizing
+if which ~/bin/colordiff.posix > /dev/null 2>&1
 then
-	alias diff=~/bin/colordiff
+	# Let's check and use POSIX-compliant shell script
+	alias diff=~/bin/colordiff.posix
+elif which ~/bin/colordiff.bash > /dev/null 2>&1
+then
+	# Let's check and use full-featured Bash script
+	alias diff=~/bin/colordiff.bash
 elif which colordiff > /dev/null 2>&1
 then
+	# Let's check and use well-known script from www.colordiff.org
 	alias diff=colordiff
 fi
 ```
