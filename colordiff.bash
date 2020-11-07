@@ -9,10 +9,8 @@
 # http://www.colordiff.org/
 colordiff() {
 	# Colors
-
-	# Because the exit code not required
-	# shellcheck disable=SC2155
-	local ESC="$( printf "\\033" )"
+	local ESC
+	ESC="$( printf "\\033" )"
 
 	# Because correct definition; no errors
 	# shellcheck disable=SC1087
