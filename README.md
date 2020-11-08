@@ -61,7 +61,7 @@ fi
 ## Environment
 
 * `CDIFF_WHEN` - the colorizing method has impact on all runs.
-* `CDIFF_COLORS` - the colon-separated list of capabilities to colorize the separate parts of the `diff` output. Colors are defined in the terms of git-config and defaults to `meta=40;1;37:frag=36:old=31:neww=32:mod=34` (bold wite for headers, cyan for line numbers, red for deleted lines, green for added lines and blue for modified lines, respectively).
+* `CDIFF_COLORS` - the colon-separated list of capabilities to colorize the separate parts of the `diff` output. Colors are defined in the terms of git-config and defaults to `meta=40;1;37:frag=36:old=31:new=32:mod=34` (bold white for metainformation or headers, cyan for hunk headers or line numbers, red for deleted lines, green for added lines and blue for modified lines, respectively).
 
 # Requirements
 
