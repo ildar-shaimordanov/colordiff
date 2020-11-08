@@ -1,0 +1,5 @@
+Consider, if it's possible to rework parsing:
+
+diff -y
+diff -n
+diff -e

@@ -111,16 +111,16 @@ HELP
 		# diff -c ...
 		# File headers
 		/^[A-Za-z0-9]/ s/^/$diff_b_meta/;
-		/^\**\$/ s/^/$diff_b_meta/;
+		/^\*\**\$/ s/^/$diff_b_meta/;
 
 		# File or difference headers
 		/^\*\*\* / {
-			/\*\*\*\*\$/! s/^/$diff_b_meta/;
-			/\*\*\*\*\$/  s/^/$diff_b_frag/;
+			/ \*\*\*\*\$/! s/^/$diff_b_meta/;
+			/ \*\*\*\*\$/  s/^/$diff_b_frag/;
 		};
 		/^--- / {
-			/----\$/! s/^/$diff_b_meta/;
-			/----\$/  s/^/$diff_b_frag/;
+			/ ----\$/! s/^/$diff_b_meta/;
+			/ ----\$/  s/^/$diff_b_frag/;
 		};
 
 		# Changed lines
